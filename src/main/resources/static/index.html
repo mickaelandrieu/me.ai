@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Pitch Elevator Assistant (with Spring AI)</title>
+  <style>
+    /* Les styles restent inchangés (vous pouvez personnaliser selon vos préférences) */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background: #f7f7f7; display: flex; flex-direction: column; min-height: 100vh; }
+    header { background: #fff; padding: 10px 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); text-align: center; }
+    header h1 { font-size: 1.5rem; color: #333; }
+    .main-container { flex: 1; max-width: 900px; margin: 20px auto; padding: 20px; }
+    .chatbox { background: #fff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+    .messages { flex: 1; padding: 20px; background: #fafafa; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .message { max-width: 70%; padding: 10px 15px; border-radius: 16px; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); word-wrap: break-word; }
+    .message.user { align-self: flex-end; background: #cbe9ff; border-bottom-right-radius: 2px; }
+    .message.bot { align-self: flex-start; background: #eee; border-bottom-left-radius: 2px; }
+    .input-area { display: flex; border-top: 1px solid #ddd; }
+    .input-area input[type="text"] { flex: 1; border: none; padding: 10px; font-size: 1rem; outline: none; }
+    .input-area button { background: #007bff; color: #fff; border: none; padding: 0 20px; font-size: 1rem; cursor: pointer; transition: background 0.3s; }
+    .input-area button:hover { background: #0056b3; }
+    footer { background: #fff; text-align: center; padding: 10px; font-size: 0.9rem; color: #777; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pitch Elevator Assistant</h1>
+  </header>
+  
+  <div class="main-container">
+    <div class="chatbox">
+      <div class="messages" id="messages"></div>
+      <div class="input-area">
+        <input type="text" id="messageInput" placeholder="Écrivez votre message..." required>
+        <button id="sendBtn">Envoyer</button>
+      </div>
+    </div>
+  </div>
+  
+  <footer>© 2025 Pitch Elevator Assistant - Tous droits réservés</footer>
+  
+  <script>
+    const messagesDiv = document.getElementById("messages");
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    let conversationId = null;
+
+    function addMessage(text, type) {
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message", type);
+      msgDiv.textContent = text;
+      messagesDiv.appendChild(msgDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function sendMessage() {
+      const userText = messageInput.value.trim();
+      if (!userText) return;
+      
+      addMessage("Vous : " + userText, "user");
+
+      const payload = { message: userText };
+
+      if (conversationId) {
+        payload.conversationId = conversationId;
+      }
+      const requestBody = JSON.stringify(payload);
+      
+      fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: requestBody
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Erreur lors de la communication avec l'API");
+        }
+        return response.json();
+      })
+      .then(data => {
+        conversationId = data.conversationId;
+        addMessage("Votre Assistant : " + data.generation, "bot");
+      })
+      .catch(err => {
+        console.error(err);
+        addMessage("Oups, une erreur est survenue...", "bot");
+      });
+      
+      messageInput.value = "";
+      messageInput.focus();
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    messageInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
