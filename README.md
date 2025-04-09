@@ -1,6 +1,10 @@
-# 🎤 Me.ai, Votre clone numérique intelligent
+# 🎤 Me.AI, Votre clone numérique intelligent
 
 Une application Java 23 / Spring Boot/AI pour assister l'utilisateur à mieux se présenter en entretien d'embauche (grâce à l'IA).
+
+## C'est quoi, Me.AI ?
+
+<img src="docs/me.ai.gif" width="500" />
 
 ## ⚙️ Prérequis
 
