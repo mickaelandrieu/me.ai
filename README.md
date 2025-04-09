@@ -21,8 +21,8 @@ PITCH_OPEN_AI_MODEL=gpt-4o
 PITCH_OPEN_AI_TEMPERATURE=0.7
 ```
 
-Ensuite ajoutez votre CV au format PDF dans le dossier `src/main/resources/static` avec le nom suivant : "cv.pdf"
-Enfin, ajouter votre photo au format jpeg `src/main/resources/static/` avec le nom suivant : "me.jpeg"
+Ensuite ajoutez votre CV au format PDF dans le dossier `src/main/resources/static` avec le nom suivant : "**cv.pdf**"
+Enfin, ajoutez votre photo au format jpeg `src/main/resources/static/` avec le nom suivant : "**me.jpeg**"
 
 ## ▶️ Lancer le Projet
 
