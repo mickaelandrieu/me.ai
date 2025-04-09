@@ -1,35 +1,39 @@
-package solvolabs.ai.pitch_elevator;
+package solvolabs.ai.me_ai;
 
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@CrossOrigin(origins = "http://localhost:8080")
-public class ChatController {
-
-    private final OpenAiChatModel chatModel;
-    private static final Map<String, Conversation> conversationMap = new ConcurrentHashMap<>();
+@Service
+public class ChatService {
 
     @Autowired
-    public ChatController(OpenAiChatModel chatModel) {
+    private SystemPromptService systemPromptService;
+
+    private final OpenAiChatModel chatModel;
+
+    @Value("${spring.ai.openai.api-key}")
+    private String apiKey;
+
+    private static final Map<String, Conversation> conversationMap = new ConcurrentHashMap<>();
+
+    public ChatService(OpenAiChatModel chatModel) {
         this.chatModel = chatModel;
     }
 
-    @PostMapping("/chat")
-    public Map<String, String> generate(@RequestBody Map<String, String> body) {
-        String conversationId = body.get("conversationId");
-        String message = body.get("message");
-        
+    public Map<String, String> handleMessage(String conversationId, String message) {
         Conversation conversation;
+
         if (conversationId == null || !conversationMap.containsKey(conversationId)) {
             conversationId = UUID.randomUUID().toString();
             conversation = new Conversation(conversationId);
@@ -37,20 +41,22 @@ public class ChatController {
         } else {
             conversation = conversationMap.get(conversationId);
         }
-        
+
         conversation.addUserMessage(message);
-        Prompt prompt = new Prompt(conversation.getMessages());
-        
+
+        Prompt prompt = new Prompt(List.of(
+                new SystemMessage(this.systemPromptService.getSystemPrompt()),
+                new UserMessage(message)
+        ));
+
         ChatResponse response = this.chatModel.call(prompt);
         String generation = response.getResult().getOutput().getText();
-
-        System.out.println(generation);
 
         conversation.addAssistantMessage(generation);
 
         return Map.of(
-            "conversationId", conversationId,
-            "generation", generation
+                "conversationId", conversationId,
+                "generation", generation
         );
     }
 }

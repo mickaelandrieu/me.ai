@@ -1,4 +1,4 @@
-package solvolabs.ai.pitch_elevator;
+package solvolabs.ai.me_ai;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

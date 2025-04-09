@@ -1,4 +1,4 @@
-package solvolabs.ai.pitch_elevator;
+package solvolabs.ai.me_ai;
 
 import java.util.ArrayList;
 import java.util.List;

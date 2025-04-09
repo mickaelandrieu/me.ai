@@ -1,10 +1,10 @@
-package solvolabs.ai.pitch_elevator;
+package solvolabs.ai.me_ai;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SolvoLabsPitchElevatorApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -33,3 +33,7 @@ build/
 
 ### Configuration ###
 .env
+
+### Spécifique au projet ###
+src/main/resources/static/cv.pdf
+src/main/resources/static/me.jpeg
