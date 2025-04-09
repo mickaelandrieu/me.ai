@@ -1,6 +1,6 @@
 # 🎤 Me.AI, Votre clone numérique intelligent
 
-Une application Java 23 / Spring Boot/AI pour assister l'utilisateur à mieux se présenter en entretien d'embauche (grâce à l'IA).
+Une application Spring AI pour en savoir plus sur vous-même !
 
 ## C'est quoi, Me.AI ?
 
@@ -40,6 +40,6 @@ Puis visitez [http://localhost:8080](http://localhost:8080).
 
 ## Et sinon ?
 
-Fait avec ❤️ par Mickaël Andrieu, ouvert aux suggestions mais pas aux contributions. 
+Fait avec ❤️ par Mickaël Andrieu, le projet est ouvert aux suggestions mais pas aux contributions. 
 
 **Le code de ce projet est réutilisable et exploitable commercialement, sans aucune condition d'attribution.**
